@@ -26,7 +26,7 @@ function iconArrow() {
 }
 
 function eyebrow(text, light = false) {
-  return `<div class="eyebrow${light ? " eyebrow-light" : ""}"><i></i>${text}</div>`;
+  return `<div class="eyebrow${light ? " eyebrow-light" : ""}">${text}</div>`;
 }
 
 function field(label, name, placeholder, type = "text", autocomplete = "") {
@@ -321,3 +321,16 @@ pathTabs.forEach((tab) => {
     document.querySelector(`[data-path="${nextPath}"]`).focus();
   });
 });
+
+const revealSections = document.querySelectorAll("main > section:not(.hero)");
+if (revealSections.length && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.documentElement.classList.add("has-scroll-reveal");
+  const sectionObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+  revealSections.forEach((section) => sectionObserver.observe(section));
+}
